@@ -9,29 +9,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-           $table->id();
+            $table->id();
+            $table->foreignId('school_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
+            $table->string('name_en')->nullable();
             $table->string('email')->unique();
+            $table->string('username')->unique()->nullable();
+            $table->string('national_id')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('gender')->nullable();  // male / female
+            $table->date('birth_date')->nullable();
+            $table->string('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['user', 'company', 'admin'])->default('user');
-            $table->string('avatar')->nullable();
-            $table->string('phone', 30)->nullable();
-            $table->text('bio')->nullable();
-            $table->string('location')->nullable();
-            $table->string('cv_path')->nullable();
-            $table->json('cv_analyzed')->nullable();
-            $table->json('skills')->nullable();
-            $table->enum('experience_level', ['entry','junior','mid','senior','lead'])->nullable();
-            $table->json('preferred_job_types')->nullable();
-            $table->json('preferred_locations')->nullable();
-            $table->decimal('expected_salary', 10, 2)->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->string('locale', 5)->default('en');
-            $table->timestamp('last_seen_at')->nullable();
+            $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->string('locale')->default('ar');
+            $table->timestamp('last_login_at')->nullable();
+            $table->string('last_login_ip')->nullable();
             $table->rememberToken();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->index('school_id');
+            $table->index('status');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
