@@ -2,143 +2,201 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\{HasOne, HasMany, BelongsToMany};
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role',
-        'bio', 'phone', 'location', 'avatar',
-        'experience_level',
-        'skills',
-        'preferred_job_types',
-        'preferred_locations',
-        'expected_salary',
-        'cv_path', 'cv_analyzed',
-        'locale', 'is_active', 'last_seen_at',
-        'notification_preferences',
+        'school_id', 'name', 'name_en', 'email', 'username', 'national_id',
+        'phone', 'avatar', 'gender', 'birth_date', 'address',
+        'password', 'status', 'locale', 'last_login_at', 'last_login_ip',
     ];
 
     protected $hidden = ['password', 'remember_token'];
 
-    // ── الحل: جميع حقول JSON مُعرَّفة صراحةً ──────────────────────
     protected $casts = [
-        'email_verified_at'        => 'datetime',
-        'last_seen_at'             => 'datetime',
-        'password'                 => 'hashed',
-        'is_active'                => 'boolean',
-
-        // ← هذه الثلاثة هي مصدر أخطاء in_array()
-        'skills'                   => 'array',
-        'preferred_job_types'      => 'array',
-        'preferred_locations'      => 'array',
-
-        'cv_analyzed'              => 'array',
-        'notification_preferences' => 'array',
-        'expected_salary'          => 'decimal:2',
+        'email_verified_at' => 'datetime',
+        'last_login_at'     => 'datetime',
+        'birth_date'        => 'date',
+        'password'          => 'hashed',
     ];
 
-    // ══════════════════════════════════════════════════════════════
-    //  Accessors — ضمان إرجاع array دائماً حتى لو البيانات قديمة
-    // ══════════════════════════════════════════════════════════════
+    // ============ RELATIONSHIPS ============
 
-    public function getSkillsAttribute($value): array
+    public function school()
     {
-        return $this->decodeJsonField($value);
+        return $this->belongsTo(School::class);
     }
 
-    public function getPreferredJobTypesAttribute($value): array
+    public function teacherProfile()
     {
-        return $this->decodeJsonField($value);
+        return $this->hasOne(TeacherProfile::class);
     }
 
-    public function getPreferredLocationsAttribute($value): array
+    public function studentProfile()
     {
-        return $this->decodeJsonField($value);
+        return $this->hasOne(StudentProfile::class);
     }
 
-    public function getCvAnalyzedAttribute($value): ?array
+    public function parentProfile()
     {
-        if (empty($value)) return null;
-        if (is_array($value)) return $value;
-        $decoded = json_decode($value, true);
-        return json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        return $this->hasOne(ParentProfile::class);
     }
 
-    /** Helper: يحوّل أي قيمة إلى array بأمان */
-    private function decodeJsonField($value): array
+    // Parent → Children
+    public function children()
     {
-        if (is_array($value))  return $value;
-        if (empty($value))     return [];
-
-        $decoded = json_decode($value, true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            return $decoded;
-        }
-
-        return array_filter(array_map('trim', explode(',', (string) $value)));
+        return $this->belongsToMany(User::class, 'parent_student', 'parent_id', 'student_id')
+                    ->withPivot('relation', 'is_primary')
+                    ->withTimestamps();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  العلاقات
-    // ══════════════════════════════════════════════════════════════
-
-    public function company(): HasOne
+    // Student → Parents
+    public function parents()
     {
-        return $this->hasOne(Company::class);
+        return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')
+                    ->withPivot('relation', 'is_primary')
+                    ->withTimestamps();
     }
 
-    public function jobApplications(): HasMany
+    // Student → Classrooms
+    public function classrooms()
     {
-        return $this->hasMany(JobApplication::class);
+        return $this->belongsToMany(Classroom::class, 'classroom_student', 'student_id')
+                    ->withPivot('enrolled_at', 'is_active', 'seat_number')
+                    ->withTimestamps();
     }
 
-    public function savedJobs(): BelongsToMany
+    // Teacher → Subjects via pivot
+    public function teachingSubjects()
     {
-        return $this->belongsToMany(Job::class, 'saved_jobs');
+        return $this->belongsToMany(Subject::class, 'teacher_subject_classroom', 'teacher_id')
+                    ->withPivot('classroom_id', 'academic_year_id', 'is_primary')
+                    ->withTimestamps();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  Role Helpers
-    // ══════════════════════════════════════════════════════════════
-
-    public function isAdmin():   bool { return $this->role === 'admin'; }
-    public function isCompany(): bool { return $this->role === 'company'; }
-    public function isUser():    bool { return $this->role === 'user'; }
-
-    // ══════════════════════════════════════════════════════════════
-    //  Job Helpers
-    // ══════════════════════════════════════════════════════════════
-
-    public function hasAppliedTo(Job $job): bool
+    public function lessonProgress()
     {
-        return $this->jobApplications()
-                    ->where('job_id', $job->id)
-                    ->exists();
+        return $this->hasMany(LessonProgress::class, 'student_id');
     }
 
-    public function hasSaved(Job $job): bool
+    public function unitProgress()
     {
-        return $this->savedJobs()->where('job_id', $job->id)->exists();
+        return $this->hasMany(UnitProgress::class, 'student_id');
     }
 
-    /** رابط الصورة الشخصية */
-    public function getAvatarUrlAttribute(): ?string
+    public function quizAttempts()
+    {
+        return $this->hasMany(QuizAttempt::class, 'student_id');
+    }
+
+    public function assignmentSubmissions()
+    {
+        return $this->hasMany(AssignmentSubmission::class, 'student_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
+    public function analytics()
+    {
+        return $this->hasMany(StudentAnalytic::class, 'student_id');
+    }
+
+    public function gamification()
+    {
+        return $this->hasOne(GamificationPoint::class, 'student_id');
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'student_badges', 'student_id')
+                    ->withPivot('earned_at', 'is_featured')
+                    ->withTimestamps();
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user')
+                    ->withPivot('last_read_at')
+                    ->withTimestamps();
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function aiRecommendations()
+    {
+        return $this->hasMany(AiRecommendation::class, 'student_id');
+    }
+
+    public function learningPaths()
+    {
+        return $this->hasMany(LearningPath::class, 'student_id');
+    }
+
+    // ============ HELPERS ============
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
+    public function isSchoolAdmin(): bool
+    {
+        return $this->hasRole('school_admin');
+    }
+
+    public function isCounselor(): bool
+    {
+        return $this->hasRole('counselor');
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->hasRole('teacher');
+    }
+
+    public function isParent(): bool
+    {
+        return $this->hasRole('parent');
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->hasRole('student');
+    }
+
+    public function getAvatarUrlAttribute(): string
     {
         return $this->avatar
             ? asset('storage/' . $this->avatar)
-            : null;
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=1E3A5F&color=fff&size=128';
     }
 
-    /** توصيات الوظائف عبر خدمة AI */
-    public function getRecommendedJobs(int $limit = 10)
+    public function getDashboardRoute(): string
     {
-        return app(\App\Services\AI\JobRecommendationService::class)
-            ->recommend($this, $limit, true);
+        if ($this->isSuperAdmin())   return route('admin.dashboard');
+        if ($this->isSchoolAdmin())  return route('school.dashboard');
+        if ($this->isCounselor())    return route('counselor.dashboard');
+        if ($this->isTeacher())      return route('teacher.dashboard');
+        if ($this->isParent())       return route('parent.dashboard');
+        if ($this->isStudent())      return route('student.dashboard');
+        return route('home');
+    }
+
+    public function getUnreadNotificationsCount(): int
+    {
+        return $this->unreadNotifications()->count();
     }
 }
