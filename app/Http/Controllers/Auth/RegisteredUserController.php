@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, VolunteerProfile};
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Support\Facades\{Auth, Hash};
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -19,37 +21,36 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-
-
-   
-
-    
         $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'role' => ['required', 'string', 'in:student,parent,teacher,counselor,school_admin'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role'     => ['required', 'in:volunteer,project_owner'],
-            'phone'    => ['nullable', 'string', 'max:20'],
-            'city'     => ['nullable', 'string', 'max:100'],
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
             'password' => Hash::make($request->password),
-            'role'     => $request->role,
-            'phone'    => $request->phone,
-            'city'     => $request->city,
         ]);
 
-        // Create volunteer profile automatically
-        if ($user->isVolunteer()) {
-            VolunteerProfile::create(['user_id' => $user->id]);
-        }
-
         event(new Registered($user));
+
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect($this->redirectByRole($user->role));
+    }
+
+    private function redirectByRole(string $role): string
+    {
+        return match ($role) {
+            'school_admin' => '/school/dashboard',
+            'teacher' => '/teacher/dashboard',
+            'counselor' => '/counselor/dashboard',
+            'parent' => '/parent/dashboard',
+            'student' => '/student/dashboard',
+            default => '/',
+        };
     }
 }

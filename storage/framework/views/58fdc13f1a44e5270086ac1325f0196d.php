@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'منصة سارة التعليمية')
 
-@section('content')
+<?php $__env->startSection('title', 'منصة سارة التعليمية'); ?>
+
+<?php $__env->startSection('content'); ?>
 <section class="relative overflow-hidden bg-gradient-to-br from-cyan-50 via-white to-violet-50 py-24">
     <div class="container-page grid items-center gap-12 lg:grid-cols-2">
         <div>
@@ -20,7 +20,7 @@
             </p>
 
             <div class="mt-8 flex flex-wrap gap-4">
-                <a href="{{ route('login') }}" class="btn-primary">الدخول إلى المنصة</a>
+                <a href="<?php echo e(route('login')); ?>" class="btn-primary">الدخول إلى المنصة</a>
                 <a href="#features" class="btn-secondary">استكشف المميزات</a>
             </div>
         </div>
@@ -76,21 +76,22 @@
         </div>
 
         <div class="mt-12 grid gap-6 md:grid-cols-3">
-            @foreach([
+            <?php $__currentLoopData = [
                 ['🧒','واجهة طالب ممتعة','دروس، اختبارات، نقاط، شارات، وتجربة بسيطة مناسبة للأطفال.'],
                 ['👩‍🏫','أدوات المعلم','إدارة الدروس، رفع الوسائط، إنشاء الاختبارات والواجبات.'],
                 ['👨‍👩‍👧','متابعة ولي الأمر','تقارير، حضور وغياب، نتائج، إشعارات، وتواصل مباشر.'],
                 ['📊','تحليلات ذكية','مؤشرات تقدم، إنذار مبكر، توصيات تعليمية، وتقارير أداء.'],
                 ['🎥','محتوى متعدد الوسائط','فيديو، صوت، صور، نصوص، ومواد تفاعلية.'],
                 ['🔔','إشعارات ورسائل','تنبيهات داخلية ورسائل تربط المدرسة بالأسرة.'],
-            ] as $feature)
+            ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feature): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="rounded-3xl border border-slate-100 bg-slate-50 p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-                    <div class="text-4xl">{{ $feature[0] }}</div>
-                    <h3 class="mt-5 text-xl font-black">{{ $feature[1] }}</h3>
-                    <p class="mt-3 leading-8 text-slate-600">{{ $feature[2] }}</p>
+                    <div class="text-4xl"><?php echo e($feature[0]); ?></div>
+                    <h3 class="mt-5 text-xl font-black"><?php echo e($feature[1]); ?></h3>
+                    <p class="mt-3 leading-8 text-slate-600"><?php echo e($feature[2]); ?></p>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\engya\Desktop\جامعة الشهباء 2026\سارة مشروع التخرج\smart_educational_platform\resources\views/home.blade.php ENDPATH**/ ?>

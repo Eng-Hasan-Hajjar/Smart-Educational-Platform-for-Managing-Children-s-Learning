@@ -1,43 +1,49 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
-
-
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-    Route::get('/register', [RegisterController::class, 'showForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
-    Route::get('/password/reset', [ForgotPasswordController::class, 'showForm'])->name('password.request');
-    Route::post('/password/email', [ForgotPasswordController::class, 'sendEmail'])->name('password.email');
-    Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showForm'])->name('password.reset');
-    Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-});
+require __DIR__ . '/auth.php';
 
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        $role = Auth::user()?->role;
 
-    Route::middleware('role:user')->prefix('user')->name('user.')->group(function () {
-        Route::get('/profile', [UserProfileController::class, 'index'])->name('profile');
-        Route::patch('/profile', [UserProfileController::class, 'update'])->name('profile.update');
-        Route::patch('/avatar', [UserProfileController::class, 'updateAvatar'])->name('avatar.update');
-        Route::patch('/preferences', [UserProfileController::class, 'updatePrefs'])->name('preferences.update');
-        Route::patch('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
-        Route::get('/cv', [UserProfileController::class, 'cvPage'])->name('cv');
-        Route::post('/cv/upload', [UserProfileController::class, 'uploadCv'])->name('cv.upload');
-        Route::get('/cv/download', [UserProfileController::class, 'downloadCv'])->name('cv.download');
-        Route::delete('/cv', [UserProfileController::class, 'deleteCv'])->name('cv.delete');
-        Route::get('/applications', [UserApplicationController::class, 'index'])->name('applications');
-        Route::get('/applications/{id}/cv', [UserApplicationController::class, 'downloadCv'])->name('application.cv');
-        Route::get('/saved-jobs', [UserProfileController::class, 'savedJobs'])->name('saved-jobs');
+        return match ($role) {
+            'super_admin' => redirect()->route('admin.dashboard'),
+            'school_admin' => redirect()->route('school.dashboard'),
+            'teacher' => redirect()->route('teacher.dashboard'),
+            'counselor' => redirect()->route('counselor.dashboard'),
+            'parent' => redirect()->route('parent.dashboard'),
+            'student' => redirect()->route('student.dashboard'),
+            default => redirect()->route('home'),
+        };
+    })->name('dashboard.redirect');
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
     });
 
+    Route::prefix('school')->name('school.')->group(function () {
+        Route::view('/dashboard', 'school-admin.dashboard')->name('dashboard');
+    });
 
+    Route::prefix('teacher')->name('teacher.')->group(function () {
+        Route::view('/dashboard', 'teacher.dashboard')->name('dashboard');
+    });
 
-// Language switcher (أضف هذا السطر في قسم الروتس المشتركة)
-Route::get('/language/{locale}', [\App\Http\Controllers\Shared\LanguageController::class, 'switch'])
-    ->name('language.switch')
-    ->where('locale', 'ar|en');
+    Route::prefix('counselor')->name('counselor.')->group(function () {
+        Route::view('/dashboard', 'counselor.dashboard')->name('dashboard');
+    });
+
+    Route::prefix('parent')->name('parent.')->group(function () {
+        Route::view('/dashboard', 'parent.dashboard')->name('dashboard');
+    });
+
+    Route::prefix('student')->name('student.')->group(function () {
+        Route::view('/dashboard', 'student.dashboard')->name('dashboard');
+    });
+});
