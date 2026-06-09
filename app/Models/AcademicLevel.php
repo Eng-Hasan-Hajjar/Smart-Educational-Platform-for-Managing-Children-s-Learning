@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class AcademicLevel extends Model
 {
     protected $fillable = [
-        'school_id', 'name', 'name_en', 'order', 'color', 'icon',
-        'description', 'min_age', 'max_age', 'is_active',
+        'school_id', 'name', 'name_en', 'order', 'color',
+        'icon', 'description', 'min_age', 'max_age', 'is_active',
     ];
 
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function school()
     {
@@ -28,8 +30,15 @@ class AcademicLevel extends Model
         return $this->hasMany(Subject::class);
     }
 
-    public function students()
+    public function studentProfiles()
     {
         return $this->hasMany(StudentProfile::class);
+    }
+
+    public function getTranslatedNameAttribute(): string
+    {
+        return app()->getLocale() === 'ar'
+            ? $this->name
+            : ($this->name_en ?? $this->name);
     }
 }

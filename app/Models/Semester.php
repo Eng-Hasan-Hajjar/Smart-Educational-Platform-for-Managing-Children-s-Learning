@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model
 {
-    protected $fillable = ['academic_year_id', 'name', 'order', 'start_date', 'end_date', 'is_current', 'status'];
+    protected $fillable = [
+        'academic_year_id', 'name', 'order', 'start_date', 'end_date', 'is_current', 'status',
+    ];
 
     protected $casts = [
         'start_date' => 'date',
@@ -27,5 +29,15 @@ class Semester extends Model
     public function performanceReports()
     {
         return $this->hasMany(PerformanceReport::class);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match($this->status) {
+            'upcoming'  => __('upcoming'),
+            'active'    => __('active'),
+            'completed' => __('completed'),
+            default     => $this->status,
+        };
     }
 }

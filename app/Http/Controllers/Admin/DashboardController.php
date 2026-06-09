@@ -1,57 +1,57 @@
 <?php
 
-
-
-// ==========================================
-// app/Http/Controllers/Admin/DashboardController.php
-// ==========================================
 namespace App\Http\Controllers\Admin;
- 
+
 use App\Http\Controllers\Controller;
-use App\Models\{User, Company, Job, JobApplication};
-use Carbon\Carbon;
- 
+use App\Models\School;
+use App\Models\User;
+use App\Models\Lesson;
+use App\Models\Quiz;
+use Illuminate\Support\Facades\DB;
+
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:super_admin']);
+    }
+
     public function index()
     {
         $stats = [
-            'users'            => User::count(),
-            'companies'        => Company::count(),
-            'active_jobs'      => Job::active()->count(),
-            'applications'     => JobApplication::count(),
-            'new_users_today'  => User::whereDate('created_at', today())->count(),
-            'verified_companies'=> Company::verified()->count(),
-            'jobs_today'       => Job::whereDate('created_at', today())->count(),
-            'apps_today'       => JobApplication::whereDate('created_at', today())->count(),
+            'schools'        => School::count(),
+            'active_schools' => School::where('status', 'active')->count(),
+            'students'       => User::role('student')->count(),
+            'teachers'       => User::role('teacher')->count(),
+            'parents'        => User::role('parent')->count(),
+            'lessons'        => Lesson::where('status', 'published')->count(),
+            'quizzes'        => Quiz::where('status', 'published')->count(),
         ];
- 
-        // 30-day registration chart
-        $days = collect(range(29, 0))->map(fn($i) => now()->subDays($i)->format('M d'));
-        $regData = collect(range(29, 0))->map(fn($i) => User::whereDate('created_at', now()->subDays($i))->count());
-        $regChart = ['labels' => $days->values(), 'data' => $regData->values()];
- 
-        // Jobs by type chart
-        $types = Job::select('type', \DB::raw('count(*) as count'))->groupBy('type')->get();
-        $jobTypesChart = [
-            'labels' => $types->pluck('type')->map(fn($t) => ucfirst(str_replace('-', ' ', $t))),
-            'data'   => $types->pluck('count'),
-        ];
- 
-        $latestUsers     = User::latest()->take(10)->get();
-        $latestCompanies = Company::with('user')->withCount('jobs')->latest()->take(10)->get();
-        $latestJobs      = Job::with('company')->withCount('applications')->latest()->take(10)->get();
- 
+
+        $recentSchools = School::latest()->take(6)->get();
+
+        // مستخدمون جدد آخر 7 أيام
+        $newUsersThisWeek = User::where('created_at', '>=', now()->subDays(7))->count();
+
+        // رسم بياني — مستخدمون جدد شهرياً
+        $monthlyUsers = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', now()->year)
+            ->groupBy('month')
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // مدارس حسب حالة الاشتراك
+        $subscriptionStats = School::selectRaw('subscription_plan, COUNT(*) as count')
+            ->groupBy('subscription_plan')
+            ->pluck('count', 'subscription_plan')
+            ->toArray();
+
         return view('admin.dashboard', compact(
-            'stats', 'regChart', 'jobTypesChart',
-            'latestUsers', 'latestCompanies', 'latestJobs'
+            'stats',
+            'recentSchools',
+            'newUsersThisWeek',
+            'monthlyUsers',
+            'subscriptionStats'
         ));
     }
- 
-    public function settings()
-    {
-        return view('admin.settings');
-    }
 }
- 
-

@@ -9,7 +9,9 @@ class AcademicYear extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['school_id', 'name', 'start_date', 'end_date', 'is_current', 'status'];
+    protected $fillable = [
+        'school_id', 'name', 'start_date', 'end_date', 'is_current', 'status',
+    ];
 
     protected $casts = [
         'start_date' => 'date',
@@ -35,5 +37,15 @@ class AcademicYear extends Model
     public function classrooms()
     {
         return $this->hasMany(Classroom::class);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match($this->status) {
+            'upcoming'  => __('upcoming'),
+            'active'    => __('active'),
+            'completed' => __('completed'),
+            default     => $this->status,
+        };
     }
 }

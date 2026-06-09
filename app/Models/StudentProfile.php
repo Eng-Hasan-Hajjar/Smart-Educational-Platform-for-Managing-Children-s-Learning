@@ -32,12 +32,12 @@ class StudentProfile extends Model
     public function getStatusLabelAttribute(): string
     {
         return match($this->academic_status) {
-            'excellent'     => 'ممتاز',
-            'good'          => 'جيد',
-            'average'       => 'متوسط',
-            'needs_support' => 'يحتاج دعماً',
-            'at_risk'       => 'في خطر',
-            default         => 'غير محدد',
+            'excellent'     => __('status.excellent'),
+            'good'          => __('status.good'),
+            'average'       => __('status.average'),
+            'needs_support' => __('status.needs_support'),
+            'at_risk'       => __('status.at_risk'),
+            default         => $this->academic_status ?? '—',
         };
     }
 

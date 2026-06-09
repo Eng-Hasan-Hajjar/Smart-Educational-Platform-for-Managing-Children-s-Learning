@@ -11,10 +11,10 @@ class School extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'name_en', 'slug', 'description', 'logo', 'cover_image',
-        'email', 'phone', 'address', 'city', 'country', 'website',
-        'status', 'subscription_plan', 'subscription_expires_at',
-        'max_students', 'max_teachers', 'settings',
+        'name', 'name_en', 'slug', 'description', 'description_en',
+        'logo', 'cover_image', 'email', 'phone', 'address', 'city',
+        'country', 'website', 'status', 'subscription_plan',
+        'subscription_expires_at', 'max_students', 'max_teachers', 'settings',
     ];
 
     protected $casts = [
@@ -22,6 +22,7 @@ class School extends Model
         'settings'                => 'array',
     ];
 
+    // ─── Relations ────────────────────────────────────────────
     public function users()
     {
         return $this->hasMany(User::class);
@@ -39,7 +40,7 @@ class School extends Model
 
     public function academicLevels()
     {
-        return $this->hasMany(AcademicLevel::class);
+        return $this->hasMany(AcademicLevel::class)->orderBy('order');
     }
 
     public function classrooms()
@@ -72,11 +73,23 @@ class School extends Model
         return $this->users()->whereHas('roles', fn($q) => $q->where('name', 'student'));
     }
 
+    // ─── Accessors ────────────────────────────────────────────
     public function getLogoUrlAttribute(): string
     {
-        return $this->logo ? asset('storage/' . $this->logo) : asset('images/default-school.png');
+        return $this->logo
+            ? asset('storage/' . $this->logo)
+            : asset('images/default-school.png');
     }
 
+    // الاسم حسب اللغة الحالية
+    public function getTranslatedNameAttribute(): string
+    {
+        return app()->getLocale() === 'ar'
+            ? $this->name
+            : ($this->name_en ?? $this->name);
+    }
+
+    // ─── Helpers ──────────────────────────────────────────────
     public function isSubscriptionActive(): bool
     {
         return $this->status === 'active' &&

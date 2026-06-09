@@ -20,4 +20,14 @@ class ParentProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getTranslatedRelationAttribute(): string
+    {
+        return match($this->relation_to_child) {
+            'father'    => __('relation.father'),
+            'mother'    => __('relation.mother'),
+            'guardian'  => __('relation.guardian'),
+            default     => $this->relation_to_child ?? '—',
+        };
+    }
 }

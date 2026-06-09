@@ -21,4 +21,9 @@ class TeacherProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getCvFileUrlAttribute(): ?string
+    {
+        return $this->cv_file ? asset('storage/' . $this->cv_file) : null;
+    }
 }
