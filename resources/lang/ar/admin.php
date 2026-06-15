@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'welcome'              => 'مرحباً',
+    'subtitle'             => 'نظرة شاملة على منصة نور التعليمية',
+    'total_schools'        => 'إجمالي المدارس',
+    'active_schools'       => 'مدارس نشطة',
+    'total_students'       => 'إجمالي الطلاب',
+    'total_teachers'       => 'إجمالي المعلمين',
+    'total_parents'        => 'أولياء الأمور',
+    'published_content'    => 'محتوى منشور',
+    'new_users_week'       => 'مستخدم جديد هذا الأسبوع',
+    'recent_schools'       => 'أحدث المدارس',
+    'subscription_distribution' => 'توزيع خطط الاشتراك',
+    'monthly_growth'       => 'نمو المستخدمين الشهري',
+    'quick_actions'        => 'إجراءات سريعة',
+    'add_school'           => 'إضافة مدرسة',
+    'add_user'             => 'إضافة مستخدم',
+    'manage_schools'       => 'إدارة المدارس',
+    'manage_users'         => 'إدارة المستخدمين',
+    'no_schools_yet'       => 'لا توجد مدارس مسجلة بعد',
+    'basic'                => 'أساسي',
+    'premium'              => 'مميز',
+    'enterprise'           => 'مؤسسي',
+    'students_short'       => 'طالب',
+    'teachers_short'       => 'معلم',
+    'edit'                 => 'تعديل',
+    'months' => [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+    ],
+];

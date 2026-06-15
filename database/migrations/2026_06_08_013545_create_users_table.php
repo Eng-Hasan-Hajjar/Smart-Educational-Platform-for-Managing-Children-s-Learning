@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
             $table->string('locale')->default('ar');
+            $table->string('theme')->default('light');
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip')->nullable();
             $table->rememberToken();

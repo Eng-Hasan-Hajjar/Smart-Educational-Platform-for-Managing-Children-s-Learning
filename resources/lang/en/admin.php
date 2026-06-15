@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'welcome'              => 'Welcome',
+    'subtitle'             => 'A complete overview of the Nour Educational Platform',
+    'total_schools'        => 'Total Schools',
+    'active_schools'       => 'Active Schools',
+    'total_students'       => 'Total Students',
+    'total_teachers'       => 'Total Teachers',
+    'total_parents'        => 'Parents',
+    'published_content'    => 'Published Content',
+    'new_users_week'       => 'new users this week',
+    'recent_schools'       => 'Recent Schools',
+    'subscription_distribution' => 'Subscription Plans',
+    'monthly_growth'       => 'Monthly User Growth',
+    'quick_actions'        => 'Quick Actions',
+    'add_school'           => 'Add School',
+    'add_user'             => 'Add User',
+    'manage_schools'       => 'Manage Schools',
+    'manage_users'         => 'Manage Users',
+    'no_schools_yet'       => 'No schools registered yet',
+    'basic'                => 'Basic',
+    'premium'              => 'Premium',
+    'enterprise'           => 'Enterprise',
+    'students_short'       => 'students',
+    'teachers_short'       => 'teachers',
+    'edit'                 => 'Edit',
+    'months' => [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ],
+];
