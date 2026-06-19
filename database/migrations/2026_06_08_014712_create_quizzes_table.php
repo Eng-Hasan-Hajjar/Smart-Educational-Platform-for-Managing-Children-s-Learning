@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lesson_id')->nullable()->constrained()->nullOnDelete();

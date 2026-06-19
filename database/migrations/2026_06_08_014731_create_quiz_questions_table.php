@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        
         Schema::create('quiz_questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained()->cascadeOnDelete();

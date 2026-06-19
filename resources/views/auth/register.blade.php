@@ -1,67 +1,153 @@
 @extends('layouts.auth')
 
-@section('title', 'إنشاء حساب')
+@section('title', __('auth.register'))
 
 @section('content')
-<div class="auth-card">
-    <div class="mb-8 text-center">
-        <h2 class="text-3xl font-black text-slate-950">إنشاء حساب جديد</h2>
-        <p class="mt-3 text-sm font-semibold text-slate-500">
-            اختر الدور المناسب ليتم توجيهك إلى لوحة التحكم الصحيحة.
-        </p>
+<form method="POST" action="{{ route('register') }}" class="space-y-6">
+    @csrf
+
+    {{-- Name Field --}}
+    <div>
+        <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('app.name') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-user"></i>
+            </span>
+            <input type="text" 
+                   id="name" 
+                   name="name" 
+                   value="{{ old('name') }}"
+                   class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                   placeholder="{{ __('app.name') }}"
+                   required
+                   autofocus>
+        </div>
+        @error('name')
+            <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+        @enderror
     </div>
 
-    @if ($errors->any())
-        <div class="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-600">
-            {{ $errors->first() }}
+    {{-- Email Field --}}
+    <div>
+        <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('app.email') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-envelope"></i>
+            </span>
+            <input type="email" 
+                   id="email" 
+                   name="email" 
+                   value="{{ old('email') }}"
+                   class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                   placeholder="{{ __('app.email') }}"
+                   required>
         </div>
-    @endif
+        @error('email')
+            <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+        @enderror
+    </div>
 
-    <form method="POST" action="{{ route('register') }}" class="space-y-5">
-        @csrf
-
-        <div>
-            <label class="auth-label">الاسم الكامل</label>
-            <input class="auth-input" type="text" name="name" value="{{ old('name') }}" required>
+    {{-- Phone Field --}}
+    <div>
+        <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('app.phone') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-phone"></i>
+            </span>
+            <input type="tel" 
+                   id="phone" 
+                   name="phone" 
+                   value="{{ old('phone') }}"
+                   class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                   placeholder="{{ __('app.phone') }}">
         </div>
+        @error('phone')
+            <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+        @enderror
+    </div>
 
-        <div>
-            <label class="auth-label">البريد الإلكتروني</label>
-            <input class="auth-input" type="email" name="email" value="{{ old('email') }}" required>
-        </div>
-
-        <div>
-            <label class="auth-label">نوع الحساب</label>
-            <select class="auth-input" name="role" required>
-                <option value="">اختر نوع الحساب</option>
-                <option value="student" @selected(old('role') === 'student')>طالب</option>
-                <option value="parent" @selected(old('role') === 'parent')>ولي أمر</option>
-                <option value="teacher" @selected(old('role') === 'teacher')>معلم</option>
-                <option value="counselor" @selected(old('role') === 'counselor')>موجه تربوي</option>
-                <option value="school_admin" @selected(old('role') === 'school_admin')>مدير مدرسة</option>
+    {{-- Role Field --}}
+    <div>
+        <label for="role" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('app.role') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-user-tag"></i>
+            </span>
+            <select id="role" 
+                    name="role"
+                    class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white"
+                    required>
+                <option value="">{{ __('app.select_role') }}</option>
+                <option value="teacher" {{ old('role') === 'teacher' ? 'selected' : '' }}>{{ __('status.teacher') }}</option>
+                <option value="parent" {{ old('role') === 'parent' ? 'selected' : '' }}>{{ __('status.parent') }}</option>
+                <option value="student" {{ old('role') === 'student' ? 'selected' : '' }}>{{ __('status.student') }}</option>
             </select>
         </div>
+        @error('role')
+            <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+        @enderror
+    </div>
 
-        <div>
-            <label class="auth-label">كلمة المرور</label>
-            <input class="auth-input" type="password" name="password" required>
+    {{-- Password Field --}}
+    <div>
+        <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('app.password') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-lock"></i>
+            </span>
+            <input type="password" 
+                   id="password" 
+                   name="password"
+                   class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                   placeholder="{{ __('app.password') }}"
+                   required>
         </div>
+        @error('password')
+            <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+        @enderror
+    </div>
 
-        <div>
-            <label class="auth-label">تأكيد كلمة المرور</label>
-            <input class="auth-input" type="password" name="password_confirmation" required>
+    {{-- Confirm Password Field --}}
+    <div>
+        <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            {{ __('auth.confirm_password') }}
+        </label>
+        <div class="relative">
+            <span class="absolute {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} top-3.5 text-gray-400">
+                <i class="fas fa-lock"></i>
+            </span>
+            <input type="password" 
+                   id="password_confirmation" 
+                   name="password_confirmation"
+                   class="w-full {{ app()->getLocale() === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4' }} py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                   placeholder="{{ __('auth.confirm_password') }}"
+                   required>
         </div>
+    </div>
 
-        <button type="submit" class="btn-primary w-full">
-            إنشاء الحساب
-        </button>
+    {{-- Register Button --}}
+    <button type="submit" 
+            class="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-lg transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+        <i class="fas fa-user-plus {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+        {{ __('auth.register') }}
+    </button>
 
-        <p class="text-center text-sm font-bold text-slate-500">
-            لديك حساب بالفعل؟
-            <a href="{{ route('login') }}" class="text-cyan-600 hover:text-cyan-700">
-                تسجيل الدخول
-            </a>
-        </p>
-    </form>
-</div>
+    {{-- Login Link --}}
+    <p class="text-center text-gray-600 dark:text-gray-400">
+        {{ __('auth.have_account') }}
+        <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold">
+            {{ __('auth.login') }}
+        </a>
+    </p>
+</form>
 @endsection

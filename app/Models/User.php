@@ -16,6 +16,7 @@ class User extends Authenticatable
         'school_id', 'name', 'name_en', 'email', 'username', 'national_id',
         'phone', 'avatar', 'gender', 'birth_date', 'address',
         'password', 'status', 'locale', 'last_login_at', 'last_login_ip',
+        'email_verified_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -184,15 +185,19 @@ class User extends Authenticatable
             : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=1E3A5F&color=fff&size=128';
     }
 
+    /**
+     * توجيه المستخدم للوحة التحكم المناسبة حسب دوره
+     * تم تصحيح أسماء المسارات لتطابق routes/web.php المُسلَّم
+     */
     public function getDashboardRoute(): string
     {
         if ($this->isSuperAdmin())   return route('admin.dashboard');
-        if ($this->isSchoolAdmin())  return route('school.dashboard');
+        if ($this->isSchoolAdmin())  return route('school-admin.dashboard');
         if ($this->isCounselor())    return route('counselor.dashboard');
         if ($this->isTeacher())      return route('teacher.dashboard');
         if ($this->isParent())       return route('parent.dashboard');
         if ($this->isStudent())      return route('student.dashboard');
-        return route('home');
+        return route('login');
     }
 
     public function getUnreadNotificationsCount(): int

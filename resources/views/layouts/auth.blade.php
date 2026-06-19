@@ -1,114 +1,138 @@
-{{-- resources/views/layouts/auth.blade.php --}}
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-theme="light">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} - @yield('title')</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <style>
-        .auth-wrapper {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        .auth-left {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .auth-left::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-        .auth-left-content { position: relative; z-index: 1; text-align: center; max-width: 400px; }
-        .auth-right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: var(--bg-body);
-            overflow-y: auto;
-        }
-        .auth-card { width: 100%; max-width: 440px; }
-        .auth-header { text-align: center; margin-bottom: 2rem; }
-        /* Theme & Lang toggles */
-        .auth-controls {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: .5rem;
-            z-index: 100;
-        }
-        [dir="rtl"] .auth-controls { right: auto; left: 1rem; }
+    <title>@yield('title') - {{ config('app.name', 'منصة نور التعليمية') }}</title>
 
-        @media (max-width: 768px) {
-            .auth-wrapper { grid-template-columns: 1fr; }
-            .auth-left { display: none; }
+    {{-- Tailwind CSS --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {{-- Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    {{-- Font Awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {{-- Custom Styles --}}
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        [dir="ltr"] {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .dark {
+            color-scheme: dark;
+        }
+
+        .light {
+            color-scheme: light;
+        }
+
+        /* Smooth Transition */
+        * {
+            @apply transition-colors duration-300;
+        }
+
+        /* Input Styles */
+        input:focus, textarea:focus, select:focus {
+            @apply outline-none ring-2 ring-blue-500;
         }
     </style>
-    @stack('styles')
+
+    @yield('css')
 </head>
-<body class="{{ app()->getLocale() === 'ar' ? 'font-arabic' : 'font-latin' }}">
+<body class="light" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" 
+      :class="{ 'dark': darkMode }"
+      @load="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
 
-    <!-- Controls -->
-    <div class="auth-controls">
-        <button id="themeToggle" class="nav-icon-btn"><i class="fas fa-moon"></i></button>
-        <button id="langSwitcher" class="nav-icon-btn" style="font-size:.75rem;font-weight:700">
-            {{ app()->getLocale() === 'ar' ? 'EN' : 'ع' }}
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        {{-- Dark Mode Toggle --}}
+        <button @click="darkMode = !darkMode" 
+                class="fixed top-6 {{ app()->getLocale() === 'ar' ? 'left-6' : 'right-6' }} p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 z-50">
+            <i class="fas" :class="darkMode ? 'fa-sun text-yellow-500' : 'fa-moon text-gray-600'"></i>
         </button>
-    </div>
 
-    <div class="auth-wrapper">
-        <!-- Left: Decorative -->
-        <div class="auth-left">
-            <div class="auth-left-content animate-fade-in">
-                <div style="font-size:4rem;margin-bottom:1.5rem">💼</div>
-                <h2 style="font-size:2rem;font-weight:800;margin-bottom:1rem;line-height:1.2">
-                    {{ __('messages.auth_left_title') }}
-                </h2>
-                <p style="opacity:.85;line-height:1.7;margin-bottom:2rem">
-                    {{ __('messages.auth_left_desc') }}
-                </p>
-                <!-- Stats -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-                    @foreach([
-                        ['value'=>'10K+','label'=>__('messages.active_jobs')],
-                        ['value'=>'5K+', 'label'=>__('messages.companies')],
-                        ['value'=>'50K+','label'=>__('messages.job_seekers')],
-                        ['value'=>'95%', 'label'=>__('messages.success_rate')],
-                    ] as $s)
-                    <div style="background:rgba(255,255,255,.12);border-radius:var(--radius-lg);padding:1rem;text-align:center;backdrop-filter:blur(8px)">
-                        <div style="font-size:1.5rem;font-weight:800">{{ $s['value'] }}</div>
-                        <div style="font-size:.75rem;opacity:.8;margin-top:.25rem">{{ $s['label'] }}</div>
-                    </div>
+        {{-- Language Toggle --}}
+        <div class="fixed top-6 {{ app()->getLocale() === 'ar' ? 'right-6' : 'left-6' }} z-50">
+            <a href="{{ route('set-locale', app()->getLocale() === 'ar' ? 'en' : 'ar') }}"
+               class="p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-bold text-blue-600 dark:text-blue-400">
+                {{ app()->getLocale() === 'ar' ? 'English' : 'العربية' }}
+            </a>
+        </div>
+
+        {{-- Main Container --}}
+        <div class="w-full max-w-md">
+            {{-- Logo Section --}}
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full shadow-lg mb-4">
+                    <i class="fas fa-graduation-cap text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    {{ config('app.name', 'منصة نور التعليمية') }}
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400">{{ __('auth.login') }}</p>
+            </div>
+
+            {{-- Alert Messages --}}
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p class="text-sm text-red-700 dark:text-red-400 font-semibold">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        {{ __('validation.failed') }}
+                    </p>
+                    @foreach ($errors->all() as $error)
+                        <p class="text-sm text-red-600 dark:text-red-400 mt-1">• {{ $error }}</p>
                     @endforeach
                 </div>
-            </div>
-        </div>
+            @endif
 
-        <!-- Right: Form -->
-        <div class="auth-right">
-            @yield('content')
+            @if (session('status'))
+                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <p class="text-sm text-green-700 dark:text-green-400 font-semibold">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        {{ session('status') }}
+                    </p>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <p class="text-sm text-green-700 dark:text-green-400 font-semibold">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        {{ session('success') }}
+                    </p>
+                </div>
+            @endif
+
+            {{-- Content --}}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+                <div class="p-8 md:p-10">
+                    @yield('content')
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="text-center mt-8 text-sm text-gray-600 dark:text-gray-400">
+                <p>© {{ date('Y') }} {{ config('app.name', 'منصة نور التعليمية') }}. {{ __('app.all_rights_reserved') }}</p>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    @stack('scripts')
+    @yield('js')
 </body>
 </html>
-

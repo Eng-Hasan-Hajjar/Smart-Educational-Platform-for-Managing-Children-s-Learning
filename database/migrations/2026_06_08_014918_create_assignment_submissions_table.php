@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        
         Schema::create('assignment_submissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('assignment_id')->constrained()->cascadeOnDelete();

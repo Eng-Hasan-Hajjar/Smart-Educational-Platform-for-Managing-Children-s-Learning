@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        
         Schema::create('audio_resources', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lesson_content_id')->nullable()->constrained()->nullOnDelete();
