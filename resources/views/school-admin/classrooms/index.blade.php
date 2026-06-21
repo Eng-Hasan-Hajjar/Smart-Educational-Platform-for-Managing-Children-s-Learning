@@ -5,7 +5,7 @@
 <div class="space-y-4">
     <div class="flex justify-between items-center">
         <p class="text-slate-500 text-sm">{{ $classrooms->total() }} فصل</p>
-        <a href="{{ route('school.classrooms.create') }}" class="btn-primary">➕ إضافة فصل</a>
+        <a href="{{ route('school-admin.classrooms.create') }}" class="btn-primary">➕ إضافة فصل</a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -38,8 +38,8 @@
             </div>
 
             <div class="flex gap-2">
-                <a href="{{ route('school.classrooms.edit',$classroom) }}" class="flex-1 btn-outline text-xs text-center justify-center">تعديل</a>
-                <form method="POST" action="{{ route('school.classrooms.destroy',$classroom) }}" onsubmit="return confirm('حذف هذا الفصل؟')">
+                <a href="{{ route('school-admin.classrooms.edit',$classroom) }}" class="flex-1 btn-outline text-xs text-center justify-center">تعديل</a>
+                <form method="POST" action="{{ route('school-admin.classrooms.destroy',$classroom) }}" onsubmit="return confirm('حذف هذا الفصل؟')">
                     @csrf @method('DELETE')
                     <button class="btn-danger text-xs">حذف</button>
                 </form>
@@ -49,7 +49,7 @@
         <div class="col-span-3 card text-center py-12">
             <span class="text-5xl">🏛️</span>
             <p class="text-slate-400 mt-3 mb-4">لا توجد فصول بعد</p>
-            <a href="{{ route('school.classrooms.create') }}" class="btn-primary">إضافة أول فصل</a>
+            <a href="{{ route('school-admin.classrooms.create') }}" class="btn-primary">إضافة أول فصل</a>
         </div>
         @endforelse
     </div>

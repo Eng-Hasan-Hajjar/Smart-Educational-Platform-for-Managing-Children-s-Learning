@@ -5,7 +5,7 @@
 <div class="space-y-4">
     <div class="flex items-center justify-between">
         <p class="text-slate-500 text-sm">{{ $teachers->total() }} معلم</p>
-        <a href="{{ route('school.teachers.create') }}" class="btn-primary">➕ إضافة معلم</a>
+        <a href="{{ route('school-admin.teachers.create') }}" class="btn-primary">➕ إضافة معلم</a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="flex gap-2">
-                <a href="{{ route('school.teachers.edit',$teacher) }}" class="flex-1 btn-outline text-xs text-center justify-center">تعديل</a>
+                <a href="{{ route('school-admin.teachers.edit',$teacher) }}" class="flex-1 btn-outline text-xs text-center justify-center">تعديل</a>
                 <a href="{{ route('teacher.reports.index') }}" class="flex-1 btn-outline text-xs text-center justify-center">التقارير</a>
             </div>
         </div>
@@ -37,10 +37,10 @@
         <div class="col-span-3 card text-center py-12">
             <span class="text-5xl">👨‍🏫</span>
             <p class="text-slate-400 mt-3 mb-4">لا يوجد معلمون بعد</p>
-            <a href="{{ route('school.teachers.create') }}" class="btn-primary">إضافة أول معلم</a>
+            <a href="{{ route('school-admin.teachers.create') }}" class="btn-primary">إضافة أول معلم</a>
         </div>
         @endforelse
     </div>
     {{ $teachers->links() }}
 </div>
-@endsection     
+@endsection

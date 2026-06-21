@@ -1,5 +1,14 @@
 # Mora School
 
+
+
+القسم المنطقي التالي: الموجه التربوي (Counselor) الكامل، أو مدير النظام (Super Admin) الكامل.
+
+
+
+
+
+
 <p align="center">
   <strong>Smart Educational Platform for Children's Learning Management</strong>
 </p>

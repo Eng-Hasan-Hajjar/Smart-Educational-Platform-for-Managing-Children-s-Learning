@@ -17,4 +17,35 @@ return [
     'points'                 => 'pts',
     'view_all_notifications' => 'View all notifications',
     'for_child'              => 'For',
+
+
+    'my_children_subtitle'       => "Track all your children's progress and achievements",
+    'to_next_level'              => 'to next level',
+    'lessons_label'               => 'lessons',
+    'avg_label'                  => 'avg',
+    'badges_label'                => 'badges',
+    'profile'                    => 'Profile',
+    'lessons_completed_full'     => 'Lessons Completed',
+    'quizzes_taken_full'         => 'Quizzes Taken',
+    'assignments_full'           => 'Assignments Submitted',
+    'attendance_rate_full'       => 'Attendance Rate',
+    'recent_lessons'             => 'Recent Lesson Progress',
+    'recent_quiz_results'        => 'Recent Quiz Results',
+    'recent_assignments'         => 'Recent Assignments',
+    'attendance_last_14'         => 'Attendance (Last 14 Days)',
+    'attendance_concern'         => 'Attendance rate below 75% — follow-up recommended',
+    'no_progress_data'           => 'No progress data yet',
+    'no_quiz_data'                => 'No quiz results yet',
+    'no_assignment_data'         => 'No assignment data yet',
+    'no_attendance_recorded'     => 'No attendance records found',
+    'subject_performance'        => 'Performance by Subject',
+    'official_reports'           => 'Official Reports',
+    'counselor_notes'            => "Counselor's Notes",
+    'recommendations'            => 'Recommendations',
+    'report_by'                  => 'By',
+    'no_official_reports'        => 'No official reports yet',
+    'no_official_reports_hint'   => 'Reports sent by the school counselor will appear here',
+
+
+    
 ];

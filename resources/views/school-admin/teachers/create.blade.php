@@ -3,7 +3,7 @@
 @section('page-title','👨‍🏫 إضافة معلم جديد')
 @section('content')
 <div class="max-w-2xl mx-auto">
-<form method="POST" action="{{ route('school.teachers.store') }}" enctype="multipart/form-data" class="space-y-6">
+<form method="POST" action="{{ route('school-admin.teachers.store') }}" enctype="multipart/form-data" class="space-y-6">
     @csrf
     <div class="card space-y-5">
         <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3">البيانات الشخصية</h3>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="flex justify-end gap-3">
-        <a href="{{ route('school.teachers.index') }}" class="btn-outline">إلغاء</a>
+        <a href="{{ route('school-admin.teachers.index') }}" class="btn-outline">إلغاء</a>
         <button type="submit" class="btn-primary">💾 حفظ المعلم</button>
     </div>
 </form>

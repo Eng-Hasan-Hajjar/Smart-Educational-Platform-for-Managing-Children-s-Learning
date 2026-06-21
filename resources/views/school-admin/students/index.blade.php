@@ -5,7 +5,7 @@
 <div class="space-y-4">
     <div class="flex items-center justify-between">
         <p class="text-slate-500 text-sm">{{ $students->total() }} طالب</p>
-        <a href="{{ route('school.students.create') }}" class="btn-primary">➕ تسجيل طالب</a>
+        <a href="{{ route('school-admin.students.create') }}" class="btn-primary">➕ تسجيل طالب</a>
     </div>
 
     <div class="card p-4">
@@ -59,8 +59,8 @@
                     </td>
                     <td class="py-3 px-4">
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('school.students.edit',$student) }}" class="text-secondary hover:underline text-xs">تعديل</a>
-                            <form method="POST" action="{{ route('school.students.toggle',$student) }}">
+                            <a href="{{ route('school-admin.students.edit',$student) }}" class="text-secondary hover:underline text-xs">تعديل</a>
+                            <form method="POST" action="{{ route('school-admin.students.toggle-status',$student) }}">
                                 @csrf @method('PATCH')
                                 <button class="text-xs {{ $student->status==='active'?'text-red-500':'text-green-600' }} hover:underline">
                                     {{ $student->status==='active'?'تعطيل':'تفعيل' }}

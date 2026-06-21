@@ -17,7 +17,7 @@
                 <button type="submit" class="btn-primary w-full">عرض الجدول</button>
             </div>
             <div class="flex items-end">
-                <a href="{{ route('school.schedules.create') }}" class="btn-outline w-full text-center justify-center">➕ إضافة حصة</a>
+                <a href="{{ route('school-admin.schedules.create') }}" class="btn-outline w-full text-center justify-center">➕ إضافة حصة</a>
             </div>
         </form>
     </div>
@@ -29,12 +29,12 @@
             <div class="card p-3">
                 <h4 class="font-bold text-slate-700 text-center mb-3 pb-2 border-b border-slate-100 text-sm">{{ $name }}</h4>
                 <div class="space-y-2">
-                    @forelse($schedules->where('day_of_week',$day) as $schedule)
+                    @forelse($schedules->get($day, collect()) as $schedule)
                     <div class="p-2.5 rounded-xl text-xs border" style="background:{{ $schedule->subject->color ?? '#2E86C1' }}15; border-color:{{ $schedule->subject->color ?? '#2E86C1' }}30">
                         <p class="font-bold text-slate-800">{{ $schedule->subject->name }}</p>
                         <p class="text-slate-500">{{ $schedule->timeSlot->start_time }} - {{ $schedule->timeSlot->end_time }}</p>
                         <p class="text-slate-400 truncate">{{ $schedule->teacher->name }}</p>
-                        <form method="POST" action="{{ route('school.schedules.destroy',$schedule) }}" class="mt-1" onsubmit="return confirm('حذف هذه الحصة؟')">
+                        <form method="POST" action="{{ route('school-admin.schedules.destroy',$schedule) }}" class="mt-1" onsubmit="return confirm('حذف هذه الحصة؟')">
                             @csrf @method('DELETE')
                             <button class="text-red-400 hover:text-red-600 font-medium">حذف</button>
                         </form>

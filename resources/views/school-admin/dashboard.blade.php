@@ -59,7 +59,7 @@
             <p class="font-bold text-danger-600">{{ __('schooladmin.at_risk_alert_title') }}</p>
             <p class="text-sm text-main mt-0.5">{{ __('schooladmin.at_risk_alert_body', ['count' => $atRiskCount]) }}</p>
         </div>
-        <a href="{{ route('school.students.index', ['status' => 'at_risk']) }}" class="btn-danger flex-shrink-0">
+        <a href="{{ route('school-admin.students.index', ['status' => 'at_risk']) }}" class="btn-danger flex-shrink-0">
             {{ __('schooladmin.review_now') }}
         </a>
     </div>
@@ -106,7 +106,7 @@
                     <span class="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-base">👨‍🎓</span>
                     {{ __('schooladmin.recent_students') }}
                 </h3>
-                <a href="{{ route('school.students.index') }}" class="text-brand-500 hover:text-brand-700 text-xs font-bold transition">
+                <a href="{{ route('school-admin.students.index') }}" class="text-brand-500 hover:text-brand-700 text-xs font-bold transition">
                     {{ __('app.view_all') }}
                 </a>
             </div>
@@ -168,7 +168,7 @@
                     <span class="w-9 h-9 rounded-xl bg-success-50 text-success-600 flex items-center justify-center text-base">🏛️</span>
                     {{ __('schooladmin.classrooms_overview') }}
                 </h3>
-                <a href="{{ route('school.classrooms.index') }}" class="text-brand-500 hover:text-brand-700 text-xs font-bold transition">
+                <a href="{{ route('school-admin.classrooms.index') }}" class="text-brand-500 hover:text-brand-700 text-xs font-bold transition">
                     {{ __('app.view_all') }}
                 </a>
             </div>
@@ -211,22 +211,22 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3 stagger">
-                <a href="{{ route('school.teachers.create') }}"
+                <a href="{{ route('school-admin.teachers.create') }}"
                    class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-brand-50 hover:bg-brand-100 hover:-translate-y-1 transition-all text-brand-600">
                     <span class="text-3xl">👨‍🏫</span>
                     <span class="text-sm font-bold">{{ __('schooladmin.add_teacher') }}</span>
                 </a>
-                <a href="{{ route('school.students.create') }}"
+                <a href="{{ route('school-admin.students.create') }}"
                    class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-info-50 hover:bg-info-50/70 hover:-translate-y-1 transition-all text-info-600">
                     <span class="text-3xl">👨‍🎓</span>
                     <span class="text-sm font-bold">{{ __('schooladmin.add_student') }}</span>
                 </a>
-                <a href="{{ route('school.schedules.index') }}"
+                <a href="{{ route('school-admin.schedules.index') }}"
                    class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-warning-50 hover:bg-warning-50/70 hover:-translate-y-1 transition-all text-warning-600">
                     <span class="text-3xl">📅</span>
                     <span class="text-sm font-bold">{{ __('schooladmin.manage_schedule') }}</span>
                 </a>
-                <a href="{{ route('school.reports.index') }}"
+                <a href="{{ route('school-admin.reports.index') }}"
                    class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-success-50 hover:bg-success-50/70 hover:-translate-y-1 transition-all text-success-600">
                     <span class="text-3xl">📊</span>
                     <span class="text-sm font-bold">{{ __('schooladmin.view_reports') }}</span>

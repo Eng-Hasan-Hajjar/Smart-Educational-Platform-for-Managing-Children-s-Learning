@@ -29,7 +29,6 @@
         <div class="absolute bottom-10 end-12 text-2xl animate-float opacity-30 hidden sm:block" style="animation-delay:.8s">🌟</div>
 
         <div class="relative z-10 flex flex-col sm:flex-row items-center gap-6">
-
             <div class="avatar-ring flex-shrink-0 animate-scale-in !p-[3px]">
                 <img src="{{ auth()->user()->avatar_url }}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover" alt="">
             </div>
@@ -50,10 +49,17 @@
 
     {{-- ══════════ Children Grid ══════════ --}}
     <div>
-        <h3 class="font-bold text-main flex items-center gap-2 mb-4">
-            <span class="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-base">👶</span>
-            {{ __('parent.my_children') }}
-        </h3>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-main flex items-center gap-2">
+                <span class="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-base">👶</span>
+                {{ __('parent.my_children') }}
+            </h3>
+            @if($children->count())
+            <a href="{{ route('parent.children.index') }}" class="text-brand-500 hover:text-brand-700 text-xs font-bold transition">
+                {{ __('app.view_all') }}
+            </a>
+            @endif
+        </div>
 
         @if($children->count())
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
@@ -72,7 +78,6 @@
                     </div>
                 </a>
 
-                {{-- Gamification mini bar --}}
                 @if($child->gamification)
                 <div class="bg-surface2 rounded-2xl p-3 mb-3">
                     <div class="flex items-center justify-between text-xs mb-1.5">
@@ -128,7 +133,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="font-bold text-sm text-main truncate">{{ $a->title }}</p>
-                    <p class="text-xs text-muted">{{ $a->subject->name }} · {{ $a->classroom->name }}</p>
+                    <p class="text-xs text-muted">{{ $a->subject->name ?? '—' }} · {{ $a->classroom->name ?? '—' }}</p>
                 </div>
                 <div class="text-end flex-shrink-0">
                     <span class="badge-{{ $overdue ? 'red' : 'yellow' }}">
