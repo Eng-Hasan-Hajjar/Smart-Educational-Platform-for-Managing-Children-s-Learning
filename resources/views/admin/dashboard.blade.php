@@ -12,14 +12,12 @@
     };
     $dayName = strtolower(now()->format('l'));
 
-    // بيانات الرسم البياني الشهري
     $monthLabels = __('admin.months');
     $monthlyData = [];
     for ($m = 1; $m <= 12; $m++) {
         $monthlyData[] = $monthlyUsers[$m] ?? 0;
     }
 
-    // توزيع خطط الاشتراك
     $planKeys   = ['basic', 'premium', 'enterprise'];
     $planColors = ['basic' => 'info', 'premium' => 'brand', 'enterprise' => 'accent'];
     $totalPlans = array_sum($subscriptionStats) ?: 1;

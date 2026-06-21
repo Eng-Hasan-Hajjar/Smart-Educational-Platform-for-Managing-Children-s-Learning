@@ -1,80 +1,125 @@
 @extends('layouts.app')
-@section('title','تعديل المدرسة')
-@section('page-title','✏️ تعديل — {{ $school->name }}')
+@section('title', __('app.edit') . ' — ' . $school->name)
+@section('page-title', __('app.edit') . ' — ' . $school->name)
+@section('page-subtitle', __('admin.edit_school_subtitle'))
+
 @section('content')
-<div class="max-w-2xl mx-auto">
-<form method="POST" action="{{ route('admin.schools.update', $school) }}" enctype="multipart/form-data" class="space-y-6">
-    @csrf @method('PUT')
-    <div class="card space-y-5">
-        <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3">تعديل معلومات المدرسة</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-                <label class="label">اسم المدرسة (عربي) *</label>
-                <input type="text" name="name" value="{{ old('name',$school->name) }}" class="input" required>
+<div class="max-w-2xl mx-auto animate-fade-up">
+    <form method="POST" action="{{ route('admin.schools.update', $school) }}" enctype="multipart/form-data" class="space-y-6"
+          x-data="{ loading: false }" @submit="loading = true">
+        @csrf @method('PUT')
+
+        <div class="card space-y-5">
+            <div class="flex items-center gap-3 pb-3 border-b border-bd">
+                <span class="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-base">🏫</span>
+                <h3 class="font-bold text-main">{{ __('admin.school_info') }}</h3>
             </div>
-            <div>
-                <label class="label">اسم المدرسة (إنجليزي)</label>
-                <input type="text" name="name_en" value="{{ old('name_en',$school->name_en) }}" class="input">
+
+            <div class="flex items-center gap-4">
+                <img src="{{ $school->logo_url }}" class="w-16 h-16 rounded-2xl object-cover ring-2 ring-bd flex-shrink-0" alt="">
+                <div class="flex-1">
+                    <label class="label">{{ __('admin.change_logo') }}</label>
+                    <input type="file" name="logo" accept="image/*" class="input !py-2.5">
+                </div>
             </div>
-            <div>
-                <label class="label">البريد الإلكتروني *</label>
-                <input type="email" name="email" value="{{ old('email',$school->email) }}" class="input" required>
-            </div>
-            <div>
-                <label class="label">رقم الهاتف</label>
-                <input type="text" name="phone" value="{{ old('phone',$school->phone) }}" class="input">
-            </div>
-            <div>
-                <label class="label">المدينة</label>
-                <input type="text" name="city" value="{{ old('city',$school->city) }}" class="input">
-            </div>
-            <div>
-                <label class="label">الدولة</label>
-                <input type="text" name="country" value="{{ old('country',$school->country) }}" class="input">
-            </div>
-            <div>
-                <label class="label">خطة الاشتراك</label>
-                <select name="subscription_plan" class="input">
-                    @foreach(['basic'=>'أساسي','premium'=>'مميز','enterprise'=>'مؤسسي'] as $val=>$label)
-                    <option value="{{ $val }}" {{ $school->subscription_plan===$val?'selected':'' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="label">تاريخ انتهاء الاشتراك</label>
-                <input type="date" name="subscription_expires_at" value="{{ old('subscription_expires_at',$school->subscription_expires_at?->format('Y-m-d')) }}" class="input">
-            </div>
-            <div>
-                <label class="label">الحد الأقصى للطلاب</label>
-                <input type="number" name="max_students" value="{{ old('max_students',$school->max_students) }}" class="input">
-            </div>
-            <div>
-                <label class="label">الحد الأقصى للمعلمين</label>
-                <input type="number" name="max_teachers" value="{{ old('max_teachers',$school->max_teachers) }}" class="input">
-            </div>
-            <div class="md:col-span-2">
-                <label class="label">وصف المدرسة</label>
-                <textarea name="description" rows="3" class="input">{{ old('description',$school->description) }}</textarea>
-            </div>
-            <div>
-                <label class="label">الشعار الحالي</label>
-                <img src="{{ $school->logo_url }}" class="w-16 h-16 rounded-xl object-cover mb-2 border border-slate-100">
-                <input type="file" name="logo" accept="image/*" class="input py-2">
-            </div>
-            <div>
-                <label class="label">الحالة</label>
-                <select name="status" class="input">
-                    @foreach(['active'=>'نشطة','inactive'=>'غير نشطة','suspended'=>'موقوفة'] as $val=>$label)
-                    <option value="{{ $val }}" {{ $school->status===$val?'selected':'' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="label">{{ __('admin.school_name_ar') }} *</label>
+                    <input type="text" name="name" value="{{ old('name', $school->name) }}" required class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.school_name_en') }}</label>
+                    <input type="text" name="name_en" value="{{ old('name_en', $school->name_en) }}" class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('app.email') }} *</label>
+                    <input type="email" name="email" value="{{ old('email', $school->email) }}" required class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.phone') }}</label>
+                    <input type="text" name="phone" value="{{ old('phone', $school->phone) }}" class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.city') }}</label>
+                    <input type="text" name="city" value="{{ old('city', $school->city) }}" class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.country') }}</label>
+                    <input type="text" name="country" value="{{ old('country', $school->country) }}" class="input">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="label">{{ __('admin.school_description') }}</label>
+                    <textarea name="description" rows="3" class="input resize-none">{{ old('description', $school->description) }}</textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="label">{{ __('admin.website') }}</label>
+                    <input type="url" name="website" value="{{ old('website', $school->website) }}" class="input">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="flex justify-end gap-3">
-        <a href="{{ route('admin.schools.index') }}" class="btn-outline">إلغاء</a>
-        <button type="submit" class="btn-primary">💾 حفظ التغييرات</button>
-    </div>
-</form>
+
+        <div class="card space-y-5">
+            <div class="flex items-center gap-3 pb-3 border-b border-bd">
+                <span class="w-9 h-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center text-base">💎</span>
+                <h3 class="font-bold text-main">{{ __('admin.subscription_info') }}</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="label">{{ __('admin.subscription_plan') }} *</label>
+                    <select name="subscription_plan" required class="input">
+                        @foreach(['basic','premium','enterprise'] as $plan)
+                        <option value="{{ $plan }}" {{ $school->subscription_plan === $plan ? 'selected' : '' }}>
+                            {{ __('admin.'.$plan) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.subscription_expires') }}</label>
+                    <input type="date" name="subscription_expires_at"
+                           value="{{ old('subscription_expires_at', $school->subscription_expires_at?->format('Y-m-d')) }}" class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.max_students') }}</label>
+                    <input type="number" name="max_students" value="{{ old('max_students', $school->max_students) }}" min="1" class="input">
+                </div>
+                <div>
+                    <label class="label">{{ __('admin.max_teachers') }}</label>
+                    <input type="number" name="max_teachers" value="{{ old('max_teachers', $school->max_teachers) }}" min="1" class="input">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="label">{{ __('admin.account_status') }}</label>
+                    <select name="status" class="input">
+                        @foreach(['active','inactive','suspended'] as $st)
+                        <option value="{{ $st }}" {{ $school->status === $st ? 'selected' : '' }}>{{ __('status.'.$st) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex gap-3">
+                <a href="{{ route('admin.schools.index') }}" class="btn-outline">{{ __('app.cancel') }}</a>
+                <button type="submit" :disabled="loading" class="btn-primary">
+                    <span x-show="!loading">💾 {{ __('app.save') }}</span>
+                    <span x-show="loading" x-cloak class="flex items-center gap-2">
+                        <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        </svg>
+                        {{ __('app.loading') }}
+                    </span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('admin.schools.destroy', $school) }}"
+                  onsubmit="return confirm('{{ __('app.confirm_delete') }}')">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn-danger">🗑️ {{ __('app.delete') }}</button>
+            </form>
+        </div>
+    </form>
 </div>
 @endsection
