@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'role:teacher']);
+       $this->middleware(['auth', 'role:teacher']);
     }
 
     public function index()
@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ->orderBy('time_slot_id')
             ->get();
 
-        // آخر الدروس
+        // آخر الدروس   
         $recentLessons = Lesson::where('teacher_id', $teacher->id)
             ->with('unit.subject')
             ->latest()

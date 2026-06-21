@@ -81,5 +81,40 @@ return [
     'is_online_class'          => 'Online Class',
     'meeting_link'              => 'Meeting Link',
 
-    
+
+
+
+    'subjects_subtitle'             => 'Manage subjects and their applicable academic levels',
+    'subjects_count'                => 'subject(s)',
+    'add_subject'                   => 'Add Subject',
+    'search_subjects'               => 'Search for a subject...',
+    'all_levels'                    => 'All Levels',
+    'no_levels_assigned'            => 'No levels assigned yet',
+    'units_count'                   => 'unit(s)',
+    'lessons_count'                 => 'lesson(s)',
+    'no_subjects_yet'               => 'No subjects yet',
+    'no_subjects_hint'              => "Start by adding your school's first subject",
+    'add_first_subject'             => 'Add First Subject',
+    'add_subject_subtitle'          => 'Create a new subject and assign its academic levels',
+    'subject_info'                  => 'Subject Information',
+    'subject_icon'                  => 'Icon',
+    'subject_color'                 => 'Accent Color',
+    'subject_name_ar'               => 'Subject Name (Arabic)',
+    'subject_name_placeholder'      => 'e.g. Mathematics',
+    'subject_name_en'               => 'Subject Name (English)',
+    'subject_description'           => 'Subject Description',
+    'subject_description_placeholder' => 'A brief description of the subject...',
+    'applicable_levels'             => 'Applicable Academic Levels',
+    'subject_active'                => 'Subject is active and available',
+    'edit_subject_subtitle'         => "Edit subject's information",
+    'subject_has_content_warning'   => 'This subject has units or lessons linked to it — it cannot be deleted until its content is removed first.',
+    'subject_created_success'       => 'Subject added successfully ✅',
+    'subject_updated_success'       => 'Subject updated successfully ✅',
+    'subject_deleted_success'       => 'Subject deleted successfully ✅',
+    'subject_has_content_error'     => 'This subject cannot be deleted because it has linked units or lessons.',
+
+    'subject_code'                  => 'Subject Code',
+    'weekly_hours'                  => 'Weekly Hours',
+    'weekly_hours_short'            => 'hrs/week',
+    'display_order'                 => 'Display Order',
 ];
