@@ -142,14 +142,15 @@ class User extends Authenticatable
     }
 
     public function learningPaths()
+     {
+        return $this->hasMany(LearningPath::class, 'student_id');
+    }
 
     public function performanceReports()
     {
         return $this->hasMany(PerformanceReport::class, 'student_id');
     }
-    {
-        return $this->hasMany(LearningPath::class, 'student_id');
-    }
+   
 
     // ============ HELPERS ============
 

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Lesson, Quiz, Assignment, AssignmentSubmission, Schedule, User};
+use App\Models\{Lesson, Quiz, Assignment, AssignmentSubmission, Schedule, User,TeacherProfile};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 
 class DashboardController extends Controller
 {
     public function __construct()
     {
-       $this->middleware(['auth', 'role:teacher']);
+    //   $this->middleware(['auth', 'role:teacher']);
     }
 
     public function index()

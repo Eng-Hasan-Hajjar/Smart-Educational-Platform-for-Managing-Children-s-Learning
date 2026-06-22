@@ -2,7 +2,8 @@
 
 return [
     // General
-    'platform_name'   => 'Nour Educational Platform',
+   'platform_name'    => 'Smart Educational Platform',
+'platform_slogan'  => 'Smart & Integrated School Management System',
     'dashboard'       => 'Dashboard',
     'save'            => 'Save',
     'cancel'          => 'Cancel',

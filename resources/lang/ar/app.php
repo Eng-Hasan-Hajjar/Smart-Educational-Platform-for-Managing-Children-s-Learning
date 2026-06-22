@@ -2,7 +2,8 @@
 
 return [
     // General
-    'platform_name'   => 'منصة نور التعليمية',
+   'platform_name'    => 'المنصة التعليمية الذكية',
+'platform_slogan'  => 'نظام إدارة مدرسية ذكي ومتكامل',
     'dashboard'       => 'لوحة التحكم',
     'save'            => 'حفظ',
     'cancel'          => 'إلغاء',

@@ -22,22 +22,30 @@ class AssignmentController extends Controller
     {
         $teacher = Auth::user();
 
+        $subjects = Subject::whereIn(
+            'id',
+            DB::table('teacher_subject_classroom')
+                ->where('teacher_id', $teacher->id)
+                ->pluck('subject_id')
+        )->get();
+
         $assignments = Assignment::where('teacher_id', $teacher->id)
             ->with(['subject', 'classroom'])
             ->withCount('submissions')
             ->withCount(['submissions as graded_count' => fn($q) => $q->where('status', 'graded')])
             ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->subject_id, fn($q) => $q->where('subject_id', $request->subject_id))
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        return view('teacher.assignments.index', compact('assignments'));
+        return view('teacher.assignments.index', compact('assignments', 'subjects'));
     }
 
     public function create()
     {
-        $teacher    = Auth::user();
-        $subjects   = $teacher->teachingSubjects()->get();
+        $teacher = Auth::user();
+        $subjects = $teacher->teachingSubjects()->get();
         $classrooms = Classroom::whereHas('teachers', fn($q) => $q->where('users.id', $teacher->id))
             ->get();
 
@@ -47,23 +55,23 @@ class AssignmentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'lesson_id'              => 'nullable|exists:lessons,id',
-            'subject_id'             => 'required|exists:subjects,id',
-            'classroom_id'           => 'required|exists:classrooms,id',
-            'title'                  => 'required|string|max:200',
-            'description'            => 'required|string',
-            'instructions'           => 'nullable|string',
-            'total_marks'            => 'required|integer|min:1',
-            'due_date'               => 'required|date|after:now',
-            'submission_type'        => 'required|in:text,file,both',
-            'allow_late_submission'  => 'boolean',
-            'late_penalty_percent'   => 'nullable|integer|min:0|max:100',
-            'max_file_size_mb'       => 'nullable|integer|min:1|max:100',
-            'attachment'             => 'nullable|file|max:20480',
+            'lesson_id' => 'nullable|exists:lessons,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'classroom_id' => 'required|exists:classrooms,id',
+            'title' => 'required|string|max:200',
+            'description' => 'required|string',
+            'instructions' => 'nullable|string',
+            'total_marks' => 'required|integer|min:1',
+            'due_date' => 'required|date|after:now',
+            'submission_type' => 'required|in:text,file,both',
+            'allow_late_submission' => 'boolean',
+            'late_penalty_percent' => 'nullable|integer|min:0|max:100',
+            'max_file_size_mb' => 'nullable|integer|min:1|max:100',
+            'attachment' => 'nullable|file|max:20480',
         ]);
 
         $data['teacher_id'] = Auth::id();
-        $data['status']     = $request->input('status', 'draft');
+        $data['status'] = $request->input('status', 'draft');
 
         if ($request->hasFile('attachment')) {
             $data['attachment'] = $request->file('attachment')->store('assignments/attachments', 'public');
@@ -79,8 +87,8 @@ class AssignmentController extends Controller
     {
         abort_if($assignment->teacher_id !== Auth::id(), 403);
 
-        $teacher    = Auth::user();
-        $subjects   = $teacher->teachingSubjects()->get();
+        $teacher = Auth::user();
+        $subjects = $teacher->teachingSubjects()->get();
         $classrooms = Classroom::whereHas('teachers', fn($q) => $q->where('users.id', $teacher->id))->get();
 
         return view('teacher.assignments.edit', compact('assignment', 'subjects', 'classrooms'));
@@ -91,19 +99,20 @@ class AssignmentController extends Controller
         abort_if($assignment->teacher_id !== Auth::id(), 403);
 
         $data = $request->validate([
-            'title'                 => 'required|string|max:200',
-            'description'           => 'required|string',
-            'instructions'          => 'nullable|string',
-            'total_marks'           => 'required|integer|min:1',
-            'due_date'              => 'required|date',
+            'title' => 'required|string|max:200',
+            'description' => 'required|string',
+            'instructions' => 'nullable|string',
+            'total_marks' => 'required|integer|min:1',
+            'due_date' => 'required|date',
             'allow_late_submission' => 'boolean',
-            'late_penalty_percent'  => 'nullable|integer|min:0|max:100',
-            'attachment'            => 'nullable|file|max:20480',
-            'status'                => 'required|in:draft,published,closed',
+            'late_penalty_percent' => 'nullable|integer|min:0|max:100',
+            'attachment' => 'nullable|file|max:20480',
+            'status' => 'required|in:draft,published,closed',
         ]);
 
         if ($request->hasFile('attachment')) {
-            if ($assignment->attachment) Storage::disk('public')->delete($assignment->attachment);
+            if ($assignment->attachment)
+                Storage::disk('public')->delete($assignment->attachment);
             $data['attachment'] = $request->file('attachment')->store('assignments/attachments', 'public');
         }
 
@@ -130,16 +139,16 @@ class AssignmentController extends Controller
         abort_if($assignment->teacher_id !== Auth::id(), 403);
 
         $data = $request->validate([
-            'marks_obtained'   => 'required|numeric|min:0|max:' . $assignment->total_marks,
+            'marks_obtained' => 'required|numeric|min:0|max:' . $assignment->total_marks,
             'teacher_feedback' => 'nullable|string|max:1000',
         ]);
 
         $submission->update([
-            'marks_obtained'   => $data['marks_obtained'],
+            'marks_obtained' => $data['marks_obtained'],
             'teacher_feedback' => $data['teacher_feedback'] ?? null,
-            'graded_at'        => now(),
-            'graded_by'        => Auth::id(),
-            'status'           => 'graded',
+            'graded_at' => now(),
+            'graded_by' => Auth::id(),
+            'status' => 'graded',
         ]);
 
         // إشعار الطالب

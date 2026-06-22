@@ -51,6 +51,13 @@ class Subject extends Model
     public function analytics()     { return $this->hasMany(StudentAnalytic::class); }
     public function learningPaths() { return $this->hasMany(LearningPath::class); }
 
+    public function teacherSubjectClassroom()
+{
+    return $this->hasMany(\Illuminate\Database\Eloquent\Relations\Pivot::class, 'teacher_subject_classroom', 'subject_id');
+}
+
+
+
     // ─── Accessors ────────────────────────────────────────────
     public function getCoverUrlAttribute(): string
     {
