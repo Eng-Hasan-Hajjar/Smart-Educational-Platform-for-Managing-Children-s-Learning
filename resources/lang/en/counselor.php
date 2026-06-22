@@ -83,4 +83,10 @@ return [
     'report_created_success' => 'Report saved successfully ✅',
     'written_by'             => 'Written by',
     'subjects_performance'   => 'Subject Performance',
+    'type_weekly'    => 'Weekly Report',
+    'type_monthly'   => 'Monthly Report',
+    'type_semester'  => 'Semester Report',
+    'type_annual'    => 'Annual Report',
+    'type_counselor' => 'Counselor Report',
+
 ];

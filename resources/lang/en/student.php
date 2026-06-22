@@ -110,4 +110,14 @@ return [
     'points_history'           => 'Points History',
     'no_transactions'          => 'No points transactions yet',
     'download'                 => 'Download',
+    'recommendations_subtitle' => 'Smart recommendations tailored to your learning level',
+    'learning_paths'           => 'Learning Paths',
+    'ai_recommendations'       => 'AI Recommendations',
+    'confidence'               => 'Confidence',
+    'expires'                  => 'Expires',
+    'go'                       => 'Start',
+    'no_recommendations'       => 'No recommendations yet',
+    'no_recommendations_hint'  => 'Recommendations will appear here once your performance is analyzed',
+    'assignment_submitted_success' => 'Assignment submitted successfully ✅',
+
 ];

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Shared;
-
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
@@ -9,10 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AnnouncementController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    public function __construct() { $this->middleware('auth'); }
 
     public function index()
     {
@@ -20,42 +15,38 @@ class AnnouncementController extends Controller
         $role = $user->roles->first()?->name;
 
         $announcements = Announcement::where('school_id', $user->school_id)
-            ->where(function ($q) use ($role) {
-                $q->whereJsonContains('target_roles', $role)
-                  ->orWhereNull('target_roles');
-            })
-            ->where(function ($q) {
-                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
-            })
+            ->forRole($role)
+            ->where(fn($q) => $q->whereNull('expires_at')->orWhere('expires_at','>=',now()))
             ->with('createdBy')
             ->latest()
             ->paginate(15);
 
-        $readIds = $user->readAnnouncements()->pluck('announcement_id')->toArray();
+        // Track read status via session (no pivot table in schema)
+        $readIds = session('read_announcements', []);
 
-        return view('shared.announcements.index', compact('announcements', 'readIds'));
+        return view('shared.announcements.index', compact('announcements','readIds'));
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create-announcements'); // اختياري حسب Policy عندك
+        abort_unless(Auth::user()->hasAnyRole(['super_admin','school_admin']), 403);
 
         $data = $request->validate([
-            'title'        => 'required|string|max:255',
-            'body'         => 'required|string',
-            'target_roles' => 'nullable|array',
-            'priority'     => 'required|in:normal,important,urgent',
-            'expires_at'   => 'nullable|date',
+            'title'       => 'required|string|max:255',
+            'body'        => 'required|string',
+            'type'        => 'required|in:general,academic,urgent,event',
+            'target_type' => 'required|in:all,teachers,students,parents,specific',
+            'expires_at'  => 'nullable|date',
         ]);
 
         Announcement::create([
-            'school_id'    => Auth::user()->school_id,
-            'created_by'   => Auth::id(),
-            'title'        => $data['title'],
-            'body'         => $data['body'],
-            'target_roles' => $data['target_roles'] ?? null,
-            'priority'     => $data['priority'],
-            'expires_at'   => $data['expires_at'] ?? null,
+            'school_id'  => Auth::user()->school_id,
+            'created_by' => Auth::id(),
+            'title'      => $data['title'],
+            'body'       => $data['body'],
+            'type'       => $data['type'],
+            'target_type'=> $data['target_type'],
+            'expires_at' => $data['expires_at'] ?? null,
         ]);
 
         return back()->with('success', __('app.announcement_created_success'));
@@ -63,8 +54,9 @@ class AnnouncementController extends Controller
 
     public function markRead(Announcement $announcement)
     {
-        Auth::user()->readAnnouncements()->syncWithoutDetaching([$announcement->id]);
-
+        $readIds = session('read_announcements', []);
+        $readIds[] = $announcement->id;
+        session(['read_announcements' => array_unique($readIds)]);
         return back();
     }
 }

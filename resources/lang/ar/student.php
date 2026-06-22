@@ -111,4 +111,14 @@ return [
     'points_history'           => 'سجل النقاط',
     'no_transactions'          => 'لا توجد معاملات نقاط بعد',
     'download'                 => 'تحميل',
+    'recommendations_subtitle' => 'توصيات ذكية مخصصة لمستواك الدراسي',
+    'learning_paths'           => 'مسارات التعلم',
+    'ai_recommendations'       => 'توصيات الذكاء الاصطناعي',
+    'confidence'               => 'الثقة',
+    'expires'                  => 'تنتهي',
+    'go'                       => 'ابدأ',
+    'no_recommendations'       => 'لا توجد توصيات حالياً',
+    'no_recommendations_hint'  => 'ستظهر هنا التوصيات عندما يتم تحليل أدائك',
+    'assignment_submitted_success' => 'تم تسليم الواجب بنجاح ✅',
+
 ];

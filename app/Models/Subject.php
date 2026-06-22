@@ -45,6 +45,7 @@ class Subject extends Model
                     ->withTimestamps();
     }
 
+    public function lessons() { return $this->hasManyThrough(Lesson::class, Unit::class); }
     public function quizzes()       { return $this->hasMany(Quiz::class); }
     public function assignments()   { return $this->hasMany(Assignment::class); }
     public function analytics()     { return $this->hasMany(StudentAnalytic::class); }

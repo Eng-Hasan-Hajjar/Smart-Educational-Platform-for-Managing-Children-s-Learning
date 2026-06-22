@@ -177,4 +177,32 @@ return [
 
 
     
+
+    // AI
+    'ai_school_refresh_success'   => 'Successfully updated analytics for :count students ✅',
+    'ai_student_refresh_success'  => 'Successfully updated analytics for :name ✅',
+    'ai_recommendations_generated' => ':count new recommendations generated ✅',
+    'ai_reason_high_risk'         => 'Your performance needs immediate attention — start reviewing your lessons',
+    'ai_reason_excellent'         => 'Excellent performance! Keep up the great work 🌟',
+    'ai_reason_weak_area'         => 'Weak area in unit :unit — review recommended',
+    'ai_reason_practice_quiz'     => 'Practice the quiz for unit :unit to improve',
+    'ai_reason_continue_learning' => 'Continue your learning journey — next lesson awaits',
+    'ai_type_lesson'   => 'Suggested Lesson',
+    'ai_type_quiz'     => 'Practice Quiz',
+    'ai_type_review'   => 'Review',
+    'ai_type_practice' => 'Practice',
+    'ai_type_warning'  => 'Warning',
+    'ai_type_praise'   => 'Achievement',
+    'recommendations'  => 'Recommendations',
+    'type'             => 'Type',
+    'type_general'     => 'General',
+    'type_academic'    => 'Academic',
+    'type_urgent'      => 'Urgent',
+    'type_event'       => 'Event',
+    'target_audience'  => 'Target Audience',
+    'teachers'         => 'Teachers',
+    'students_label'   => 'Students',
+    'parents_label'    => 'Parents',
+    'more'             => 'more',
+
 ];

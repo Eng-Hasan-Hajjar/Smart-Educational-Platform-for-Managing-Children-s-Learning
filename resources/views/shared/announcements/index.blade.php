@@ -30,13 +30,23 @@
                     <label class="label">{{ __('app.body') }} *</label>
                     <textarea name="body" rows="4" required class="input resize-none"></textarea>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                        <label class="label">{{ __('app.priority') }}</label>
-                        <select name="priority" class="input">
-                            <option value="normal">{{ __('app.priority_normal') }}</option>
-                            <option value="important">{{ __('app.priority_important') }}</option>
-                            <option value="urgent">{{ __('app.priority_urgent') }}</option>
+                        <label class="label">{{ __('app.type') }}</label>
+                        <select name="type" class="input">
+                            <option value="general">{{ __('app.type_general') }}</option>
+                            <option value="academic">{{ __('app.type_academic') }}</option>
+                            <option value="urgent">{{ __('app.type_urgent') }}</option>
+                            <option value="event">{{ __('app.type_event') }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">{{ __('app.target_audience') }}</label>
+                        <select name="target_type" class="input">
+                            <option value="all">{{ __('app.all') }}</option>
+                            <option value="teachers">{{ __('app.teachers') }}</option>
+                            <option value="students">{{ __('app.students_label') }}</option>
+                            <option value="parents">{{ __('app.parents_label') }}</option>
                         </select>
                     </div>
                     <div>
@@ -44,44 +54,28 @@
                         <input type="date" name="expires_at" class="input">
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    @foreach(['school_admin'=>__('app.school_admin'),'counselor'=>__('app.counselor'),'teacher'=>__('app.teacher'),'parent'=>__('app.parent'),'student'=>__('app.student')] as $v=>$l)
-                    <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-bd cursor-pointer text-xs
-                                  has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 transition">
-                        <input type="checkbox" name="target_roles[]" value="{{ $v }}" class="w-3.5 h-3.5 accent-brand-500">
-                        {{ $l }}
-                    </label>
-                    @endforeach
-                </div>
                 <div class="flex justify-end">
-                    <button type="submit" :disabled="loading" class="btn-primary">
-                        📢 {{ __('app.publish') }}
-                    </button>
+                    <button type="submit" :disabled="loading" class="btn-primary">📢 {{ __('app.publish') }}</button>
                 </div>
             </form>
         </div>
     </div>
     @endhasanyrole
 
-    {{-- ══════════ Announcements List ══════════ --}}
     @forelse($announcements as $a)
     @php
         $isRead = in_array($a->id, $readIds);
-        $priorityStyle = match($a->priority) {
-            'urgent'    => ['border-danger-500/30 bg-danger-50', 'danger', '🚨'],
-            'important' => ['border-warning-500/30 bg-warning-50', 'warning', '⚠️'],
-            default     => ['border-bd', 'brand', '📢'],
+        $priorityStyle = match($a->type) {
+            'urgent'   => ['border-danger-500/30 bg-danger-50', 'danger', '🚨'],
+            'academic' => ['border-warning-500/30 bg-warning-50', 'warning', '📚'],
+            'event'    => ['border-info-500/30 bg-info-50', 'info', '📅'],
+            default    => ['border-bd', 'brand', '📢'],
         };
     @endphp
     <div class="card !p-4 animate-fade-up {{ $priorityStyle[0] }} {{ !$isRead ? 'shadow-glow' : '' }}"
          style="animation-delay:{{ .03 * $loop->index }}s"
          @if(!$isRead)
-         x-data x-init="
-            fetch('{{ route('announcements.read', $a) }}', {
-                method:'POST',
-                headers:{'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content}
-            })
-         "
+         x-data x-init="fetch('{{ route('announcements.read', $a) }}', {method:'POST',headers:{'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content}})"
          @endif>
         <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-xl bg-{{ $priorityStyle[1] }}-50 text-{{ $priorityStyle[1] }}-600 flex items-center justify-center text-xl flex-shrink-0">
@@ -95,9 +89,7 @@
                     @endif
                 </div>
                 <p class="text-sm text-muted leading-relaxed">{{ $a->body }}</p>
-                <p class="text-xs text-faint mt-2">
-                    {{ $a->createdBy->name }} · {{ $a->created_at->diffForHumans() }}
-                </p>
+                <p class="text-xs text-faint mt-2">{{ $a->createdBy->name }} · {{ $a->created_at->diffForHumans() }}</p>
             </div>
         </div>
     </div>

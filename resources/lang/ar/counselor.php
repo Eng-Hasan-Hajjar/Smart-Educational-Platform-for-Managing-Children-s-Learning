@@ -83,4 +83,10 @@ return [
     'report_created_success' => 'تم حفظ التقرير بنجاح ✅',
     'written_by'             => 'بقلم',
     'subjects_performance'   => 'أداء المواد الدراسية',
+    'type_weekly'    => 'تقرير أسبوعي',
+    'type_monthly'   => 'تقرير شهري',
+    'type_semester'  => 'تقرير فصلي',
+    'type_annual'    => 'تقرير سنوي',
+    'type_counselor' => 'تقرير الموجه التربوي',
+
 ];

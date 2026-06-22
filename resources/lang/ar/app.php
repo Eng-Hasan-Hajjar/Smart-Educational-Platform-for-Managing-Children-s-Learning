@@ -176,4 +176,32 @@ return [
     'profile_updated_success'  => 'تم تحديث ملفك الشخصي بنجاح ✅',
 
     
+
+    // AI
+    'ai_school_refresh_success'   => 'تم تحديث تحليلات :count طالب بنجاح ✅',
+    'ai_student_refresh_success'  => 'تم تحديث تحليلات :name بنجاح ✅',
+    'ai_recommendations_generated' => 'تم توليد :count توصية جديدة ✅',
+    'ai_reason_high_risk'         => 'أداؤك يحتاج اهتماماً فورياً — ابدأ بمراجعة دروسك',
+    'ai_reason_excellent'         => 'أداء ممتاز! استمر في التميز 🌟',
+    'ai_reason_weak_area'         => 'نقطة ضعف في وحدة :unit — يُنصح بالمراجعة',
+    'ai_reason_practice_quiz'     => 'تدرّب على اختبار وحدة :unit لتحسين مستواك',
+    'ai_reason_continue_learning' => 'أكمل رحلتك التعليمية — الدرس التالي في انتظارك',
+    'ai_type_lesson'   => 'درس مقترح',
+    'ai_type_quiz'     => 'اختبار تدريبي',
+    'ai_type_review'   => 'مراجعة',
+    'ai_type_practice' => 'تمرين',
+    'ai_type_warning'  => 'تنبيه',
+    'ai_type_praise'   => 'تميّز',
+    'recommendations'  => 'التوصيات',
+    'type'             => 'النوع',
+    'type_general'     => 'عام',
+    'type_academic'    => 'أكاديمي',
+    'type_urgent'      => 'عاجل',
+    'type_event'       => 'فعالية',
+    'target_audience'  => 'الجمهور المستهدف',
+    'teachers'         => 'المعلمون',
+    'students_label'   => 'الطلاب',
+    'parents_label'    => 'أولياء الأمور',
+    'more'             => 'المزيد',
+
 ];

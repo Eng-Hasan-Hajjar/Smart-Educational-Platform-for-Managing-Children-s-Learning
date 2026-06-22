@@ -82,10 +82,10 @@
                 <div>
                     <label class="label">{{ __('counselor.report_type') }} *</label>
                     <select name="type" required class="input">
-                        <option value="periodic"   {{ old('type') === 'periodic'   ? 'selected' : '' }}>{{ __('counselor.type_periodic') }}</option>
-                        <option value="final"      {{ old('type') === 'final'      ? 'selected' : '' }}>{{ __('counselor.type_final') }}</option>
-                        <option value="behavioral" {{ old('type') === 'behavioral' ? 'selected' : '' }}>{{ __('counselor.type_behavioral') }}</option>
-                        <option value="custom"     {{ old('type') === 'custom'     ? 'selected' : '' }}>{{ __('counselor.type_custom') }}</option>
+                        <option value="weekly"   {{ old('type') === 'periodic'   ? 'selected' : '' }}>{{ __('counselor.type_weekly') }}</option>
+                        <option value="semester"      {{ old('type') === 'final'      ? 'selected' : '' }}>{{ __('counselor.type_semester') }}</option>
+                        <option value="counselor" {{ old('type') === 'behavioral' ? 'selected' : '' }}>{{ __('counselor.type_counselor') }}</option>
+                        <option value="annual"     {{ old('type') === 'custom'     ? 'selected' : '' }}>{{ __('counselor.type_annual') }}</option>
                     </select>
                 </div>
             </div>

@@ -16,7 +16,7 @@ class User extends Authenticatable
         'school_id', 'name', 'name_en', 'email', 'username', 'national_id',
         'phone', 'avatar', 'gender', 'birth_date', 'address',
         'password', 'status', 'locale', 'last_login_at', 'last_login_ip',
-        'email_verified_at',
+        'email_verified_at', 'theme',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -142,6 +142,11 @@ class User extends Authenticatable
     }
 
     public function learningPaths()
+
+    public function performanceReports()
+    {
+        return $this->hasMany(PerformanceReport::class, 'student_id');
+    }
     {
         return $this->hasMany(LearningPath::class, 'student_id');
     }
